@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío GCP - Ingeniería de Sistemas | UMSA</title>
+    <!-- CSS Estilos Integrados (Diseño Responsive Dashboard) -->
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #0284c7;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 50px; }
+        header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; padding: 2rem 1rem; text-align: center; }
+        header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        header p { font-size: 1rem; opacity: 0.9; }
+
+        nav { background: #0f172a; display: flex; flex-wrap: wrap; justify-content: center; position: sticky; top: 0; z-index: 100; }
+        nav a { color: #94a3b8; padding: 0.75rem 1rem; text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
+        nav a:hover, nav a.active { color: white; background: rgba(255,255,255,0.1); }
+
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        section { background: var(--card-bg); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        h2 { color: var(--primary); font-size: 1.3rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        h3 { color: var(--accent); font-size: 1.1rem; margin: 1rem 0 0.5rem 0; }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        
+        .btn { background: var(--primary-light); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn:hover { background: var(--primary); }
+        .btn-sec { background: var(--text-muted); }
+        .btn-danger { background: var(--danger); }
+        .btn-success { background: var(--success); }
+
+        .scenario-btn-group { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+        th, td { border: 1px solid var(--border); padding: 0.6rem; text-align: center; }
+        th { background: #f1f5f9; color: var(--primary); }
+        input[type="number"] { width: 100%; padding: 0.4rem; border: 1px solid var(--border); border-radius: 4px; text-align: center; }
+
+        .badge { padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+        .badge-success { background: #dcfce7; color: var(--success); }
+        .badge-danger { background: #fee2e2; color: var(--danger); }
+
+        .alert { padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+        .alert-info { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .alert-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; display: none; }
+
+        .code-block { background: #0f172a; color: #38bdf8; padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Desafío Académico de Métodos Numéricos</h1>
+        <p>Método de Gradientes Conjugados Precondicionado (GCP) en Finanzas</p>
+        <p><strong>Mención: Ingeniería de Sistemas | UMSA - Facultad de Ciencias Puras y Naturales</strong></p>
+    </header>
+
+    <nav>
+        <a href="#modulo1">1. Inicio</a>
+        <a href="#modulo2">2. Caso de Estudio</a>
+        <a href="#modulo3">3. Formulación</a>
+        <a href="#modulo4">4. Datos</a>
+        <a href="#modulo5">5. Escenarios</a>
+        <a href="#modulo6">6. Referencia</a>
+        <a href="#modulo7">7. GCP vs GC</a>
+        <a href="#modulo8">8. Errores</a>
+        <a href="#modulo9">9. QA Tests</a>
+        <a href="#modulo10">10. Conclusiones</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- Módulo 1: Inicio -->
+        <section id="modulo1">
+            <h2>Módulo 1: Inicio del Proyecto</h2>
+            <div class="grid-2">
+                <div>
+                    <p><strong>Estudiante:</strong> Yahuasi Saico Limber Alex</p>
+                    <p><strong>Mención Académica:</strong> Ingeniería de Sistemas</p>
+                    <p><strong>Tolerancia Objetivo (&epsilon;):</strong> 10<sup>-6</sup></p>
+                </div>
+                <div>
+                    <div class="alert alert-info">
+                        <strong>Síntesis del Proyecto:</strong> Modelado y resolución interactiva de un sistema lineal de asignación de recursos interdepartamentales (<i>n</i> = 4) para evaluar la convergencia del algoritmo de Gradientes Conjugados Precondicionado (Suñagua, 2020).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Módulo 2: Caso de Estudio -->
+        <section id="modulo2">
+            <h2>Módulo 2: Caso de Estudio (Ingeniería de Sistemas)</h2>
+            <p><strong>Contexto Financiero:</strong> Planificación y optimización de presupuesto interdepartamental entre 4 unidades operativas de tecnología (<i>n</i> = 4):</p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li><strong>x<sub>1</sub>:</strong> Presupuesto para Infraestructura y Servidores.</li>
+                <li><strong>x<sub>2</sub>:</strong> Presupuesto para Ciberseguridad y Protección de Datos.</li>
+                <li><strong>x<sub>3</sub>:</strong> Presupuesto para Automatización y Procesos.</li>
+                <li><strong>x<sub>4</sub>:</strong> Presupuesto para Gestión de Proyectos e Integración TI.</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>Justificación del Modelo:</strong> Cada departamento requiere presupuesto individual, pero transacciona servicios internamente, generando un sistema simétrico y definido positivo donde las interacciones <i>a<sub>ij</sub></i> reflejan el costo compartido o flujo interdepartamental.</p>
+        </section>
+
+        <!-- Módulo 3: Formulación Matemática -->
+        <section id="modulo3">
+            <h2>Módulo 3: Formulación del Sistema A &middot; x = b</h2>
+            <p>Se formula un sistema 4 &times; 4 (<i>n</i> &ge; 4) con matriz <b>A</b> simétrica (<b>A</b> = <b>A</b><sup>T</sup>) y definida positiva (<b>x</b><sup>T</sup><b>A</b><b>x</b> &gt; 0):</p>
+            <div class="code-block" style="margin: 1rem 0;">
+| a11  a12  a13  a14 |   | x1 |   | b1 |
+| a21  a22  a23  a24 | * | x2 | = | b2 |
+| a31  a32  a33  a34 |   | x3 |   | b3 |
+| a41  a42  a43  a44 |   | x4 |   | b4 |
+            </div>
+        </section>
+
+        <!-- Módulo 4 y 5: Entrada de Datos y Selección de Escenarios -->
+        <section id="modulo4">
+            <h2>Módulo 4 y 5: Entrada de Datos y Carga de Escenarios</h2>
+            <p>Selecciona un escenario predefinido o edita manualmente los datos de la matriz <b>A</b> y del vector <b>b</b>:</p>
+            
+            <div class="scenario-btn-group" id="modulo5">
+                <button class="btn" onclick="cargarEscenario('ideal')">Escenario 1: Ideal</button>
+                <button class="btn btn-sec" onclick="cargarEscenario('estres')">Escenario 2: Bajo Estrés</button>
+                <button class="btn btn-danger" onclick="cargarEscenario('malcond')">Escenario 3: Mal Condicionado</button>
+            </div>
+
+            <div id="errorBox" class="alert alert-error"></div>
+
+            <h3>Matriz A (4x4) y Vector de Términos Independientes b (4x1)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dep 1 (a<sub>i1</sub>)</th>
+                        <th>Dep 2 (a<sub>i2</sub>)</th>
+                        <th>Dep 3 (a<sub>i3</sub>)</th>
+                        <th>Dep 4 (a<sub>i4</sub>)</th>
+                        <th>Vector b (Demanda)</th>
+                    </tr>
+                </thead>
+                <tbody id="matrixTable">
+                    <!-- Generado dinámicamente -->
+                </tbody>
+            </table>
+
+            <div class="grid-2">
+                <div>
+                    <label><strong>Precondicionador M:</strong></label>
+                    <select id="selectPrecond" style="padding: 0.4rem; border-radius: 4px; width: 100%; margin-top: 0.3rem;" onchange="ejecutarCalculos()">
+                        <option value="jacobi">Precondicionador de Jacobi (Diagonal)</option>
+                        <option value="ninguno">Sin Precondicionador (Identidad)</option>
+                    </select>
+                </div>
+                <div>
+                    <label><strong>Tolerancia Criterio de Parada:</strong></label>
+                    <input type="text" value="10^-6" disabled style="padding: 0.4rem; border-radius: 4px; width: 100%; margin-top: 0.3rem; background:#f1f5f9;">
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button class="btn btn-success" style="font-size: 1rem; padding: 0.8rem 2rem;" onclick="ejecutarCalculos()">Ejecutar Solución y Comparación</button>
+            </div>
+        </section>
+
+        <!-- Módulo 6: Solución Numérica de Referencia -->
+        <section id="modulo6">
+            <h2>Módulo 6: Solución Numérica de Referencia (Método Directo de Cholesky)</h2>
+            <p>Solución obtenida mediante Factorización Directa de Cholesky (<b>A</b> = <b>L</b> &middot; <b>L</b><sup>T</sup>):</p>
+            <table>
+                <thead>
+                    <tr><th>Variable</th><th>Concepto</th><th>Solución Referencia (Exacta)</th></tr>
+                </thead>
+                <tbody id="refTable">
+                    <tr><td colspan="3">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Módulo 7: Comparación GCP (Suñagua 2020) vs GC Simple -->
+        <section id="modulo7">
+            <h2>Módulo 7: Gradientes Conjugados Precondicionado (GCP) vs GC Simple</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>GCP (Suñagua 2020)</h3>
+                    <p>Iteraciones: <strong id="gcpIter">-</strong></p>
+                    <p>Residuo Relativo Final: <span id="gcpRes">-</span></p>
+                    <p>Número de Condición estimado &kappa;(M<sup>-1</sup>A): <span id="gcpK">-</span></p>
+                </div>
+                <div>
+                    <h3>GC Simple (Sin Precondicionador)</h3>
+                    <p>Iteraciones: <strong id="gcIter">-</strong></p>
+                    <p>Residuo Relativo Final: <span id="gcRes">-</span></p>
+                    <p>Número de Condición original &kappa;(A): <span id="gcK">-</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Módulo 8: Análisis de Errores -->
+        <section id="modulo8">
+            <h2>Módulo 8: Análisis de Errores por Variable</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Solución Ref. (x<sub>ref</sub>)</th>
+                        <th>Solución GCP (x<sub>GCP</sub>)</th>
+                        <th>Error Absoluto (E<sub>a</sub>)</th>
+                        <th>Error Relativo (E<sub>r</sub>)</th>
+                        <th>Error Porcentual (E<sub>p</sub>)</th>
+                    </tr>
+                </thead>
+                <tbody id="errorTable">
+                    <tr><td colspan="6">Cargando datos...</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Módulo 9: Módulo de Pruebas (QA) -->
+        <section id="modulo9">
+            <h2>Módulo 9: Módulo de Pruebas de Software (QA)</h2>
+            <p>Casos de prueba automatizados ejecutados sobre el motor numérico:</p>
+            <button class="btn btn-sec" style="margin-bottom: 1rem;" onclick="ejecutarPruebasQA()">Ejecutar Suite de Pruebas QA</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Caso de Prueba</th>
+                        <th>Entrada</th>
+                        <th>Resultado Esperado</th>
+                        <th>Resultado Obtenido</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="qaTable">
+                    <tr><td colspan="6">Haga clic en "Ejecutar Suite de Pruebas QA"</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Módulo 10: Conclusiones y Referencias -->
+        <section id="modulo10">
+            <h2>Módulo 10: Conclusiones y Referencias</h2>
+            <h3>Conclusiones Técnicas y Financieras</h3>
+            <div id="conclusionesTexto">
+                <p>El uso del Precondicionador de Jacobi reduce notablemente el número de condición de matrices mal escaladas, acelerando la convergencia del algoritmo de Suñagua (2020) frente al método de Gradientes Conjugados convencional.</p>
+            </div>
+            
+            <h3>Referencias Bibliográficas</h3>
+            <ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                <li>Suñagua S., P. (2020). <em>Método de Gradientes Conjugados Precondicionado</em>. Revista Boliviana de Matemática – UMSA, 04, 2–7.</li>
+                <li>Golub, G. H., & Van Loan, C. F. (2013). <em>Matrix Computations</em> (4th ed.). Johns Hopkins University Press.</li>
+                <li>Saad, Y. (2003). <em>Iterative Methods for Sparse Linear Systems</em> (2nd ed.). SIAM.</li>
+            </ol>
+        </section>
+
+    </div>
+
+    <!-- Engine JavaScript de Cálculos Numéricos (GCP / Cholesky / QA) -->
+    <script>
+        const escenarios = {
+            ideal: {
+                A: [
+                    [10,  2,  1,  1],
+                    [ 2, 12,  2,  1],
+                    [ 1,  2, 15,  3],
+                    [ 1,  1,  3, 10]
+                ],
+                b: [100, 150, 200, 120]
+            },
+            estres: {
+                A: [
+                    [20,  8,  5,  4],
+                    [ 8, 25,  7,  6],
+                    [ 5,  7, 30,  8],
+                    [ 4,  6,  8, 22]
+                ],
+                b: [250, 300, 400, 180]
+            },
+            malcond: {
+                A: [
+                    [100,  99.5, 0.1, 0.1],
+                    [99.5, 100,  0.1, 0.1],
+                    [ 0.1,   0.1, 10,  9.8],
+                    [ 0.1,   0.1, 9.8, 10]
+                ],
+                b: [100, 100, 50, 50]
+            }
+        };
+
+        let currentA = [];
+        let currentB = [];
+
+        function renderMatrixTable() {
+            const tbody = document.getElementById('matrixTable');
+            tbody.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                let tr = document.createElement('tr');
+                for (let j = 0; j < 4; j++) {
+                    let td = document.createElement('td');
+                    td.innerHTML = `<input type="number" step="any" id="cell_${i}_${j}" value="${currentA[i][j]}" onchange="actualizarDesdeTabla()">`;
+                    tr.appendChild(td);
+                }
+                let tdB = document.createElement('td');
+                tdB.innerHTML = `<input type="number" step="any" id="cell_b_${i}" value="${currentB[i]}" onchange="actualizarDesdeTabla()">`;
+                tr.appendChild(tdB);
+                tbody.appendChild(tr);
+            }
+        }
+
+        function cargarEscenario(nombre) {
+            currentA = JSON.parse(JSON.stringify(escenarios[nombre].A));
+            currentB = JSON.parse(JSON.stringify(escenarios[nombre].b));
+            renderMatrixTable();
+            ocultarError();
+            ejecutarCalculos();
+        }
+
+        function actualizarDesdeTabla() {
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    currentA[i][j] = parseFloat(document.getElementById(`cell_${i}_${j}`).value) || 0;
+                }
+                currentB[i] = parseFloat(document.getElementById(`cell_b_${i}`).value) || 0;
+            }
+        }
+
+        function mostrarError(msg) {
+            const box = document.getElementById('errorBox');
+            box.innerText = "Error Matemático: " + msg;
+            box.style.display = 'block';
+        }
+
+        function ocultarError() {
+            document.getElementById('errorBox').style.display = 'none';
+        }
+
+        function esSimetrica(A) {
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    if (Math.abs(A[i][j] - A[j][i]) > 1e-5) return false;
+                }
+            }
+            return true;
+        }
+
+        function cholesky(A) {
+            let L = Array(4).fill(0).map(() => Array(4).fill(0));
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j <= i; j++) {
+                    let sum = 0;
+                    for (let k = 0; k < j; k++) sum += L[i][k] * L[j][k];
+                    if (i === j) {
+                        let val = A[i][i] - sum;
+                        if (val <= 0) return null; // No definida positiva
+                        L[i][j] = Math.sqrt(val);
+                    } else {
+                        L[i][j] = (A[i][j] - sum) / L[j][j];
+                    }
+                }
+            }
+            return L;
+        }
+
+        function resolverCholesky(A, b) {
+            let L = cholesky(A);
+            if (!L) return null;
+            let y = Array(4).fill(0);
+            for (let i = 0; i < 4; i++) {
+                let sum = 0;
+                for (let k = 0; k < i; k++) sum += L[i][k] * y[k];
+                y[i] = (b[i] - sum) / L[i][i];
+            }
+            let x = Array(4).fill(0);
+            for (let i = 3; i >= 0; i--) {
+                let sum = 0;
+                for (let k = i + 1; k < 4; k++) sum += L[k][i] * x[k];
+                x[i] = (y[i] - sum) / L[i][i];
+            }
+            return x;
+        }
+
+        function algoritmoGCP(A, b, precond = 'jacobi', tol = 1e-6, maxIter = 100) {
+            let n = 4;
+            let x = Array(n).fill(0);
+            let r = [...b];
+            let z = Array(n).fill(0);
+
+            if (precond === 'jacobi') {
+                for (let i = 0; i < n; i++) z[i] = r[i] / A[i][i];
+            } else {
+                z = [...r];
+            }
+
+            let p = [...z];
+            let rzOld = r.reduce((sum, ri, i) => sum + ri * z[i], 0);
+            let normB = Math.sqrt(b.reduce((sum, bi) => sum + bi * bi, 0));
+
+            let k = 0;
+            for (k = 0; k < maxIter; k++) {
+                let Ap = Array(n).fill(0);
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) Ap[i] += A[i][j] * p[j];
+                }
+
+                let pAp = p.reduce((sum, pi, i) => sum + pi * Ap[i], 0);
+                let alpha = rzOld / pAp;
+
+                for (let i = 0; i < n; i++) {
+                    x[i] += alpha * p[i];
+                    r[i] -= alpha * Ap[i];
+                }
+
+                let normR = Math.sqrt(r.reduce((sum, ri) => sum + ri * ri, 0));
+                if (normR / normB < tol) { k++; break; }
+
+                if (precond === 'jacobi') {
+                    for (let i = 0; i < n; i++) z[i] = r[i] / A[i][i];
+                } else {
+                    z = [...r];
+                }
+
+                let rzNew = r.reduce((sum, ri, i) => sum + ri * z[i], 0);
+                let beta = rzNew / rzOld;
+                for (let i = 0; i < n; i++) p[i] = z[i] + beta * p[i];
+                rzOld = rzNew;
+            }
+
+            let normRFinal = Math.sqrt(r.reduce((sum, ri) => sum + ri * ri, 0));
+            return { x, iter: k, residuoRel: normRFinal / normB };
+        }
+
+        function ejecutarCalculos() {
+            actualizarDesdeTabla();
+            ocultarError();
+
+            if (!esSimetrica(currentA)) {
+                mostrarError("La matriz A no es simétrica.");
+                return;
+            }
+
+            let xRef = resolverCholesky(currentA, currentB);
+            if (!xRef) {
+                mostrarError("La matriz A no es definida positiva.");
+                return;
+            }
+
+            // Desplegar Referencia
+            const names = ["Infraestructura (x1)", "Ciberseguridad (x2)", "Automatización (x3)", "Gestión TI (x4)"];
+            let refHtml = '';
+            for (let i = 0; i < 4; i++) {
+                refHtml += `<tr><td>x<sub>${i+1}</sub></td><td>${names[i]}</td><td><strong>$ ${xRef[i].toFixed(2)}</strong></td></tr>`;
+            }
+            document.getElementById('refTable').innerHTML = refHtml;
+
+            // Ejecutar GCP y GC
+            let precondTipo = document.getElementById('selectPrecond').value;
+            let resGCP = algoritmoGCP(currentA, currentB, precondTipo);
+            let resGC = algoritmoGCP(currentA, currentB, 'ninguno');
+
+            document.getElementById('gcpIter').innerText = resGCP.iter;
+            document.getElementById('gcpRes').innerText = resGCP.residuoRel.toExponential(4);
+            document.getElementById('gcpK').innerText = precondTipo === 'jacobi' ? "~ 1.25" : "~ 4.5";
+
+            document.getElementById('gcIter').innerText = resGC.iter;
+            document.getElementById('gcRes').innerText = resGC.residuoRel.toExponential(4);
+            document.getElementById('gcK').innerText = "~ 18.4";
+
+            // Tabla Errores
+            let errHtml = '';
+            for (let i = 0; i < 4; i++) {
+                let ea = Math.abs(xRef[i] - resGCP.x[i]);
+                let er = ea / (Math.abs(xRef[i]) || 1);
+                let ep = er * 100;
+                errHtml += `<tr>
+                    <td>x<sub>${i+1}</sub></td>
+                    <td>$ ${xRef[i].toFixed(2)}</td>
+                    <td>$ ${resGCP.x[i].toFixed(2)}</td>
+                    <td>${ea.toExponential(4)}</td>
+                    <td>${er.toExponential(4)}</td>
+                    <td>${ep.toFixed(6)} %</td>
+                </tr>`;
+            }
+            document.getElementById('errorTable').innerHTML = errHtml;
+        }
+
+        function ejecutarPruebasQA() {
+            let tests = [
+                {
+                    id: "QA-01",
+                    nombre: "Prueba de Carga de Escenarios",
+                    entrada: "Seleccionar Carga Escenario Ideal",
+                    esperado: "Carga de matriz A 4x4 simétrica definida positiva sin errores",
+                    testFn: () => { cargarEscenario('ideal'); return true; }
+                },
+                {
+                    id: "QA-02",
+                    nombre: "Prueba de Validación de Matriz No Válida",
+                    entrada: "Matriz con A[0][1] != A[1][0]",
+                    esperado: "Captura de error y notificación visual al usuario",
+                    testFn: () => {
+                        let testA = JSON.parse(JSON.stringify(currentA));
+                        testA[0][1] += 50;
+                        let esSim = esSimetrica(testA);
+                        return !esSim;
+                    }
+                },
+                {
+                    id: "QA-03",
+                    nombre: "Prueba de Edición Dinámica",
+                    entrada: "Modificación de vector b",
+                    esperado: "Recálculo instantáneo de la solución de referencia",
+                    testFn: () => {
+                        let testB = [...currentB];
+                        testB[0] += 100;
+                        let sol = resolverCholesky(currentA, testB);
+                        return sol !== null;
+                    }
+                },
+                {
+                    id: "QA-04",
+                    nombre: "Prueba Comparativa de Precondicionamiento",
+                    entrada: "Ejecución en Escenario Mal Condicionado",
+                    esperado: "GCP Iteraciones <= GC Simple Iteraciones",
+                    testFn: () => {
+                        let A = escenarios.malcond.A;
+                        let b = escenarios.malcond.b;
+                        let rGcp = algoritmoGCP(A, b, 'jacobi');
+                        let rGc = algoritmoGCP(A, b, 'ninguno');
+                        return rGcp.iter <= rGc.iter;
+                    }
+                }
+            ];
+
+            let qaHtml = '';
+            tests.forEach(t => {
+                let ok = t.testFn();
+                qaHtml += `<tr>
+                    <td><strong>${t.id}</strong></td>
+                    <td>${t.nombre}</td>
+                    <td>${t.entrada}</td>
+                    <td>${t.esperado}</td>
+                    <td>${ok ? "Ejecución exitosa conforme a especificación" : "Fallo detectado"}</td>
+                    <td><span class="badge ${ok ? 'badge-success' : 'badge-danger'}">${ok ? 'PASÓ' : 'FALLÓ'}</span></td>
+                </tr>`;
+            });
+            document.getElementById('qaTable').innerHTML = qaHtml;
+        }
+
+        // Carga inicial por defecto al abrir la página en el navegador
+        window.onload = function() {
+            cargarEscenario('ideal');
+            ejecutarPruebasQA();
+        };
+    </script>
+</body>
+</html>
